@@ -1,4 +1,4 @@
-# University of Akron Student Data Analysis Project
+# University of *** Student Data Analysis Project
 
 ## Project Overview
 
