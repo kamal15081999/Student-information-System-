@@ -1,5 +1,5 @@
 # Analysis Methodology
-## University of Akron Student Data Analysis
+## University of *** Student Data Analysis
 
 **Date:** December 2025
 
@@ -404,7 +404,7 @@
 
 ## References
 
-- University of Akron Dataset Definitions
+- University of *** Dataset Definitions
 - SAT to ACT Conversion Chart
 - Standard statistical methods for educational data analysis
 - Best practices for higher education analytics
