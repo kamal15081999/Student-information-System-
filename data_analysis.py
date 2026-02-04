@@ -1,8 +1,8 @@
 """
-University of Akron Student Data Analysis
+University of *** Student Data Analysis
 ==========================================
 This script performs comprehensive analysis of student applications and enrollment data
-for the University of Akron across 5 academic years (2016-2021).
+for the University of *** across 5 academic years (2016-2021).
 
 Date: December 2025
 """
