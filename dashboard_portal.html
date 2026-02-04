@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>University of Akron – Analytics Dashboard Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card-bg: #151a2b;
+      --accent: #1f77b4;
+      --accent-soft: rgba(31, 119, 180, 0.2);
+      --text: #f5f5f7;
+      --muted: #a0a4b8;
+      --border: #252a3a;
+      --hover: #23293d;
+      --zoom: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151a2b 0, #050712 55%, #020308 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 16px 18px 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+      align-items: center;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 0.03em;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+      gap: 18px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #1e2436 0, #101321 55%);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.55);
+      padding: 16px 16px 14px;
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card h2 span.badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      background: rgba(5, 180, 255, 0.09);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .list li {
+      border-radius: 10px;
+      padding: 8px 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: background 0.16s ease, border-color 0.16s ease, transform 0.07s ease;
+    }
+
+    .list li:hover {
+      background: var(--hover);
+      border-color: var(--accent-soft);
+      transform: translateY(-1px);
+    }
+
+    .list li.active {
+      border-color: var(--accent);
+      background: linear-gradient(90deg, rgba(31, 119, 180, 0.18), transparent);
+    }
+
+    .label {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .label span.title {
+      font-size: 13px;
+    }
+
+    .label span.sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .main-view {
+      background: radial-gradient(circle at top, #1c2235 0, #101321 60%);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px;
+    }
+
+    .main-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .main-header p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .main-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button.icon-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(15, 19, 35, 0.9);
+      color: var(--text);
+      font-size: 11px;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.16s ease, border-color 0.16s ease, transform 0.07s ease;
+    }
+
+    button.icon-btn:hover {
+      background: rgba(31, 119, 180, 0.22);
+      border-color: var(--accent);
+      transform: translateY(-0.5px);
+    }
+
+    button.icon-btn span.icon {
+      font-size: 13px;
+    }
+
+    .viewer-tabs {
+      display: inline-flex;
+      padding: 2px;
+      border-radius: 999px;
+      background: rgba(5, 7, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 2px;
+    }
+
+    .viewer-tabs button {
+      border-radius: 999px;
+      border: none;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .viewer-tabs button.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .viewer {
+      flex: 1;
+      border-radius: 12px;
+      overflow: auto;
+      background: #050711;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .viewer-inner {
+      width: 100%;
+      height: 100%;
+      transform-origin: top left;
+    }
+
+    .viewer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+      background: #050711;
+    }
+
+    .viewer img {
+      max-width: 100%;
+      max-height: 100%;
+      display: none;
+      background: #050711;
+    }
+
+    .viewer iframe.active,
+    .viewer img.active {
+      display: block;
+    }
+
+    .viewer-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .zoom-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(5, 7, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .zoom-controls button {
+      border-radius: 999px;
+      border: none;
+      padding: 2px 7px;
+      font-size: 11px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .zoom-controls button:hover {
+      background: rgba(31, 119, 180, 0.25);
+      color: #fff;
+    }
+
+    .zoom-level {
+      padding: 0 4px;
+      min-width: 44px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>University of Akron – Analytics Portal</h1>
+      <p>Central view for all dashboards – quickly switch between static PNGs and interactive HTML experiences.</p>
+    </header>
+
+    <div class="layout">
+      <aside class="side">
+        <section class="card">
+          <h2>Dashboards <span class="badge">Static &amp; Interactive</span></h2>
+          <p>Select a dashboard on the left, then choose whether to view the PNG (for slide-ready images) or the interactive HTML (for live exploration).</p>
+          <ul class="list" id="dashboard-list">
+            <li data-key="executive" class="active">
+              <div class="label">
+                <span class="title">Executive Dashboard</span>
+                <span class="sub">High-level institutional KPIs</span>
+              </div>
+              <span class="pill">Executive</span>
+            </li>
+            <li data-key="admissions">
+              <div class="label">
+                <span class="title">Admissions Dashboard</span>
+                <span class="sub">Applications, funnel &amp; test scores</span>
+              </div>
+              <span class="pill">Admissions</span>
+            </li>
+            <li data-key="college">
+              <div class="label">
+                <span class="title">College Deans Dashboard</span>
+                <span class="sub">College performance and programs</span>
+              </div>
+              <span class="pill">Colleges</span>
+            </li>
+            <li data-key="diversity">
+              <div class="label">
+                <span class="title">Diversity &amp; Inclusion Dashboard</span>
+                <span class="sub">Demographics, Pell, URM, first-gen</span>
+              </div>
+              <span class="pill">Diversity</span>
+            </li>
+          </ul>
+        </section>
+      </aside>
+
+      <main class="main-view">
+        <div class="main-header">
+          <div>
+            <h3 id="viewer-title">Executive Dashboard</h3>
+            <p id="viewer-subtitle">Static PNG or interactive HTML view of institutional KPIs.</p>
+          </div>
+          <div class="main-actions">
+            <div class="viewer-tabs">
+              <button id="tab-png" class="active" type="button">PNG (static)</button>
+              <button id="tab-html" type="button">Interactive HTML</button>
+            </div>
+            <div class="zoom-controls">
+              <button id="zoom-out" type="button">−</button>
+              <span class="zoom-level" id="zoom-level">100%</span>
+              <button id="zoom-in" type="button">+</button>
+              <button id="zoom-reset" type="button">Reset</button>
+            </div>
+            <button class="icon-btn" type="button" id="open-new-tab">
+              <span class="icon">↗</span>
+              Open in new tab
+            </button>
+          </div>
+        </div>
+
+        <div class="viewer" id="viewer">
+          <div class="viewer-empty" id="viewer-empty">Select a dashboard to begin.</div>
+          <!-- Populated by JavaScript -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Map dashboard keys to their PNG and HTML paths (relative to this file).
+    const DASHBOARDS = {
+      executive: {
+        title: "Executive Dashboard",
+        subtitle: "Static PNG or interactive HTML view of institutional KPIs.",
+        png: "Dashboards/Executive_Dashboard.png",
+        html: "Dashboards/Executive_Dashboard_Interactive.html",
+      },
+      admissions: {
+        title: "Admissions Dashboard",
+        subtitle: "Applications, funnel metrics, scores, and yield.",
+        png: "Dashboards/Admissions_Dashboard.png",
+        html: "Dashboards/Admissions_Dashboard_Interactive.html",
+      },
+      college: {
+        title: "College Deans Dashboard",
+        subtitle: "Enrollment, GPA, credit hours, and top programs by college.",
+        png: "Dashboards/College_Deans_Dashboard.png",
+        html: "Dashboards/College_Deans_Dashboard_Interactive.html",
+      },
+      diversity: {
+        title: "Diversity & Inclusion Dashboard",
+        subtitle: "Ethnicity, first-gen, Pell, URM, and diversity index trends.",
+        png: "Dashboards/Diversity_Dashboard.png",
+        html: "Dashboards/Diversity_Dashboard_Interactive.html",
+      },
+    };
+
+    const listEl = document.getElementById("dashboard-list");
+    const viewerEl = document.getElementById("viewer");
+    const viewerEmptyEl = document.getElementById("viewer-empty");
+    const titleEl = document.getElementById("viewer-title");
+    const subtitleEl = document.getElementById("viewer-subtitle");
+    const tabPng = document.getElementById("tab-png");
+    const tabHtml = document.getElementById("tab-html");
+    const openNewBtn = document.getElementById("open-new-tab");
+    const zoomInBtn = document.getElementById("zoom-in");
+    const zoomOutBtn = document.getElementById("zoom-out");
+    const zoomResetBtn = document.getElementById("zoom-reset");
+    const zoomLevelLabel = document.getElementById("zoom-level");
+
+    let currentKey = "executive";
+    let currentMode = "png"; // "png" or "html"
+    let zoomLevel = 1;
+    let viewerInnerEl = null;
+
+    function applyZoom() {
+      if (viewerInnerEl) {
+        viewerInnerEl.style.transform = "scale(" + zoomLevel + ")";
+      }
+      zoomLevelLabel.textContent = Math.round(zoomLevel * 100) + "%";
+    }
+
+    function renderViewer() {
+      const cfg = DASHBOARDS[currentKey];
+      if (!cfg) return;
+
+      titleEl.textContent = cfg.title;
+      subtitleEl.textContent = cfg.subtitle;
+
+      viewerEl.innerHTML = "";
+
+      const inner = document.createElement("div");
+      inner.className = "viewer-inner";
+
+      let img = document.createElement("img");
+      img.src = cfg.png;
+      img.alt = cfg.title + " PNG";
+      img.className = currentMode === "png" ? "active" : "";
+
+      let iframe = document.createElement("iframe");
+      iframe.src = cfg.html;
+      iframe.title = cfg.title + " (Interactive)";
+      iframe.className = currentMode === "html" ? "active" : "";
+
+      inner.appendChild(img);
+      inner.appendChild(iframe);
+      viewerEl.appendChild(inner);
+
+      viewerInnerEl = inner;
+      applyZoom();
+
+      viewerEmptyEl.style.display = "none";
+
+      // Update open-in-new-tab target
+      openNewBtn.onclick = () => {
+        const target = currentMode === "png" ? cfg.png : cfg.html;
+        window.open(target, "_blank", "noopener");
+      };
+    }
+
+    function setActiveItem(key) {
+      currentKey = key;
+      Array.from(listEl.querySelectorAll("li")).forEach((li) => {
+        li.classList.toggle("active", li.dataset.key === key);
+      });
+      renderViewer();
+    }
+
+    listEl.addEventListener("click", (e) => {
+      const li = e.target.closest("li[data-key]");
+      if (!li) return;
+      setActiveItem(li.dataset.key);
+    });
+
+    tabPng.addEventListener("click", () => {
+      currentMode = "png";
+      tabPng.classList.add("active");
+      tabHtml.classList.remove("active");
+      renderViewer();
+    });
+
+    tabHtml.addEventListener("click", () => {
+      currentMode = "html";
+      tabHtml.classList.add("active");
+      tabPng.classList.remove("active");
+      renderViewer();
+    });
+
+    zoomInBtn.addEventListener("click", () => {
+      zoomLevel = Math.min(2.5, zoomLevel + 0.15);
+      applyZoom();
+    });
+
+    zoomOutBtn.addEventListener("click", () => {
+      zoomLevel = Math.max(0.5, zoomLevel - 0.15);
+      applyZoom();
+    });
+
+    zoomResetBtn.addEventListener("click", () => {
+      zoomLevel = 1;
+      applyZoom();
+    });
+
+    // Initial render
+    applyZoom();
+    renderViewer();
+  </script>
+</body>
+</html>
+
+
