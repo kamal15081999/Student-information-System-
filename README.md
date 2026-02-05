@@ -1,8 +1,8 @@
-# University of *** Student Data Analysis Project
+# Student Data Analysis Project
 
 ## Project Overview
 
-This project provides comprehensive analysis of student applications, enrollments, demographics, and retention patterns at the University of Akron across 5 academic years (2016-2021). The analysis is designed to support decision-making for various university stakeholders including the Provost's Office, Admissions Office, College Deans, and faculty.
+This project provides comprehensive analysis of student applications, enrollments, demographics, and retention patterns at the University across 5 academic years (2016-2021). The analysis is designed to support decision-making for various university stakeholders including the Provost's Office, Admissions Office, College Deans, and faculty.
 
 ## Project Structure
 
@@ -270,17 +270,15 @@ For questions about this analysis:
 - Check the code comments for explanations
 - Refer to the methodology document
 
-## Project Timeline
 
 - **Analysis Period**: Academic Years 2016-2021
-- **Project Date**: December 2025
-- **Submission Deadline**: December 23, 2025, 11:59 PM EST
+- *
 
 ## License and Usage
 
-This analysis is for the University of Akron technical interview process. The synthetic dataset should not be shared externally per project instructions.
+This analysis is for Knowledge purpose only. The synthetic dataset should not be shared externally per project instructions.
 
 ---
 
-**Last Updated**: December 2025
+
 
