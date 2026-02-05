@@ -13,7 +13,7 @@ Data Analysis Project/
 ├── Enrollment_Data.csv                 # Student enrollment and retention data
 ├── Dataset Definitions.csv             # Data dictionary
 ├── SAT to ACT Conversion Chart.csv     # Test score conversion reference
-├── Technical Round-Instructions.csv     # Project requirements
+
 │
 ├── data_analysis.py                    # Main analysis script
 ├── dashboard_visualizations.py         # Dashboard generation script
